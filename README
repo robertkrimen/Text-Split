@@ -1,12 +1,11 @@
 NAME
-    Text::Pivot - Partition text around a pivot (like 'split' but with more
-    control and flexibility)
+    Text::Split - Text splitting with fine-grained control and introspection
 
 VERSION
     version 0.0010
 
 SYNOPSIS
-        my $pivot = Text::Pivot->new( ... )
+        my $split = Text::Split->new( ... )
 
 AUTHOR
       Robert Krimen <robertkrimen@gmail.com>

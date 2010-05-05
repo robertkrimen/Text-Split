@@ -6,7 +6,7 @@ use warnings;
 use Test::Most;
 plan 'no_plan';
 
-use Text::Pivot;
+use Text::Split;
 
 my ( $t0, $p0, $p1, $p2 );
 
@@ -40,7 +40,7 @@ qwerty
 
 _END_
 
-$p0 = Text::Pivot->new( data => $data );
+$p0 = Text::Split->new( data => $data );
 is( $p0->preceding, '' );
 is( $p0->remaining, $data );
 
