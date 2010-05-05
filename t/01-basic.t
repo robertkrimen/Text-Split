@@ -6,7 +6,7 @@ use warnings;
 use Test::Most;
 plan 'no_plan';
 
-use Text::Partition;
+use Text::Pivot;
 
 my ( $t0, $p0, $p1, $p2 );
 
@@ -25,22 +25,7 @@ sub ore ($) {
     diag 're: [', $p0->remaining, ']';
 }
 
-$t0 = Text::Partition->new( data => <<_END_ );
-
-{
-    abcdefghijklmnopqrstuvwxyz
-
-qwerty
--
-1 2 3 4 5 5 6 7 8 9     
-
-    xyzzy
-
-}
-
-_END_
-
-$p0 = Text::Partition::Pivot->new( data => <<_END_ );
+$p0 = Text::Pivot->new( data => <<_END_ );
 
 {
     abcdefghijklmnopqrstuvwxyz
