@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+use Dzpl
+    name => 'Text-Partition',
+    version => '0.0010',
+    author => 'Robert Krimen <robertkrimen@gmail.com>',
+    license => 'Perl5',
+    copyright => 'Robert Krimen',
+
+    require => q/
+        Any::Moose
+
+        [Test]
+        Test::Most
+    /;
+;
+
+plugin
+    '@Basic' => qr/Readme$/,
+    'PkgVersion',
+    'PodWeaver',
+    'ReadmeFromPod',
+    '=Dist::Dzpl::Plugin::DynamicManifest',
+    '=Dist::Dzpl::Plugin::CopyReadmeFromBuild',
+;
+
+run;
