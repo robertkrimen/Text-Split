@@ -25,7 +25,7 @@ sub ore ($) {
     diag 're: [', $p0->remaining, ']';
 }
 
-$p0 = Text::Pivot->new( data => <<_END_ );
+my $data = <<_END_;
 
 {
     abcdefghijklmnopqrstuvwxyz
@@ -40,23 +40,46 @@ qwerty
 
 _END_
 
-diag $p0->remaining;
+$p0 = Text::Pivot->new( data => $data );
+is( $p0->preceding, '' );
+is( $p0->remaining, $data );
 
 $p1 = $p0->find( qr/rty/ );
+is( $p1->preceding, <<_END_ );
 
-o0 $p1;
-opr $p1;
-ore $p1;
+{
+    abcdefghijklmnopqrstuvwxyz
 
-$p2 = $p1->find( qr/ 5 6 7 / );
+_END_
+is( $p1->remaining, <<_END_ );
+-
+1 2 3 4 5 5 6 7 8 9     
 
-o0 $p2;
-opr $p2;
-ore $p2;
+    xyzzy
 
-#$s0->skip_until( qr/rty/ );
-#is( $s0->read_until( qr/5 6/ ), <<_END_ );
-#qwerty
+}
 
-#1 2 3 4 5 5 6 7 8 9     
-#_END_
+_END_
+
+$p2 = $p1->find( qr/ 5 (6) 7 / );
+is( $p2->preceding, <<_END_ );
+-
+_END_
+is( $p2->remaining, <<_END_ );
+
+    xyzzy
+
+}
+
+_END_
+is( $p2->match( 0 ), 6 );
+is( $p2->found, ' 5 6 7 ' );
+
+$p0 = $p2;
+$p0 = $p0->find( qr/}\n\n/ );
+is( $p0->preceding, <<_END_ );
+
+    xyzzy
+
+_END_
+is( $p0->remaining, '' );
