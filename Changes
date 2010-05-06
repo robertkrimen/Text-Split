@@ -1,3 +1,7 @@
+TODO:
+    - Test for /mgc
+    - Automatically add /m to end of pattern?
+
 0.011:
     - Added separate .slurp method
 

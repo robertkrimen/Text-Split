@@ -144,13 +144,19 @@ sub split {
     return if $length <= $from; # Was already at end of data
 
     pos $data = $from;
-    return unless my @match = $$data =~ m/\G[[:ascii:]]*?($matcher)/;
-
+    return unless $$data =~ m/\G[[:ascii:]]*?($matcher)/mgc;
+#warn "@-";
+#warn "@+";
+    my @match = map { substr $$data, $-[$_], $+[$_] - $-[$_] } ( 0 .. -1 + scalar @- );
+#warn join ' / ', map { "<<$_>>" } @match;
+    shift @match;
+    my $found = shift @match;
     my ( $mhead, $mtail ) = ( $-[1], $+[1] - 1 );
+
     my $head = _fhead $data, $mhead;
     my $tail = _ftail $data, $mtail;
 
-    my $found = shift @match;
+    # TODO This is hacky
     my @matched = @match;
 
     my $content = substr $$data, $head, 1 + $tail - $head;

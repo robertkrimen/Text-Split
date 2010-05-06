@@ -2,7 +2,7 @@ NAME
     Text::Split - Text splitting with fine-grained control
 
 VERSION
-    version 0.0010
+    version 0.0011
 
 SYNOPSIS
         $data = <<_END_
