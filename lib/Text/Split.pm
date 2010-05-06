@@ -54,7 +54,7 @@ has found => qw/ is ro required 1 isa Str /, default => '';
 has content => qw/ is ro required 1 isa Str /, default => '';
 has _matched => qw/ init_arg matched is ro isa ArrayRef /, default => sub { [] };
 sub matched { return @{ $_[0]->matched } }
-has matcher => qw/ is ro required 1 /, default => undef;
+has matcher => qw/ is ro /, default => undef;
 
 has default => qw/  is ro lazy_build 1 isa HashRef /;
 sub _build_default { {
