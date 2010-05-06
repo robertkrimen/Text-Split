@@ -92,7 +92,7 @@ sub is_root {
     return ! $self->_parent;
 }
 
-sub _chomp_or_chomped ($) {
+sub _chomped2chomp ($) {
     my $slurp = $_[0];
     $slurp->{chomp} = delete $slurp->{chomped} if
         exists $slurp->{chomped} && not exists $slurp->{chomp};
@@ -102,11 +102,11 @@ sub _parse_slurp ($@) {
     my $slurp = shift;
     my %slurp = @_; # Can/will be overidden
 
-    _chomp_or_chomped \%slurp;
+    _chomped2chomp \%slurp;
 
     if ( ref $slurp eq 'HASH' ) {
         $slurp = { %$slurp };
-        _chomp_or_chomped $slurp;
+        _chomped2chomp $slurp;
         %slurp = ( %slurp, %$slurp );
     }
     else {
@@ -145,10 +145,7 @@ sub split {
 
     pos $data = $from;
     return unless $$data =~ m/\G[[:ascii:]]*?($matcher)/mgc;
-#warn "@-";
-#warn "@+";
     my @match = map { substr $$data, $-[$_], $+[$_] - $-[$_] } ( 0 .. -1 + scalar @- );
-#warn join ' / ', map { "<<$_>>" } @match;
     shift @match;
     my $found = shift @match;
     my ( $mhead, $mtail ) = ( $-[1], $+[1] - 1 );
@@ -175,13 +172,15 @@ sub split {
 
 sub slurp {
     my $self = shift;
-    my $slurp;
+    my $slurp = 1;
     $slurp = shift if @_ % 2; # Odd number of arguments
     my %given = @_;
 
     my $split = $self;
 
+    _chomped2chomp \%given;
     my %slurp = _parse_slurp $self->default->{slurp};
+    $slurp{chomp} = $given{chomp} if exists $given{chomp};
     %slurp = _parse_slurp $slurp, %slurp unless $slurp eq 1;
 
     my @content;
@@ -189,15 +188,14 @@ sub slurp {
     push @content, $split->preceding;
     push @content, $split->content if $slurp{slurpr};
 
-    if ( $slurp{wantlist} ) {
+    if ( wantarray && $slurp{wantlist} ) {
         @content = grep { $_ ne "\n" } split m/(\n)/, join '', @content;
         @content = map { "$_\n" } @content unless $slurp{chomp};
+        return @content;
     }
     else {
-        @content = ( join '', @content );
+        return join '', @content;
     }
-
-    return @content;
 }
 
 sub preceding {
@@ -216,9 +214,11 @@ sub remaining {
     my $data = $self->data;
     return $$data if $self->is_root;
 
-    my $length = length( $$data ) - $self->tail + 1;
+    my $from = $self->tail + 1;
+
+    my $length = length( $$data ) - $from + 1;
     return '' unless $length;
-    return substr $$data, $self->tail + 1, $length;
+    return substr $$data, $from, $length;
 }
 sub re { return shift->remaining( @_ ) }
 
