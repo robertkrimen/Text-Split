@@ -44,7 +44,7 @@ $p0 = Text::Split->new( data => $data );
 is( $p0->preceding, '' );
 is( $p0->remaining, $data );
 
-$p1 = $p0->find( qr/rty/ );
+$p1 = $p0->split( qr/rty/ );
 is( $p1->preceding, <<_END_ );
 
 {
@@ -61,7 +61,7 @@ is( $p1->remaining, <<_END_ );
 
 _END_
 
-$p2 = $p1->find( qr/ 5 (6) 7 / );
+$p2 = $p1->split( qr/ 5 (6) 7 / );
 is( $p2->preceding, <<_END_ );
 -
 _END_
@@ -76,7 +76,7 @@ is( $p2->match( 0 ), 6 );
 is( $p2->found, ' 5 6 7 ' );
 
 $p0 = $p2;
-$p0 = $p0->find( qr/}\n\n/ );
+$p0 = $p0->split( qr/}\n\n/ );
 is( $p0->preceding, <<_END_ );
 
     xyzzy
