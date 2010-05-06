@@ -1,9 +1,46 @@
 package Text::Split;
-# ABSTRACT: Text splitting with fine-grained control and introspection
+# ABSTRACT: Text splitting with fine-grained control
 
 =head1 SYNOPSIS
 
-    my $split = Text::Split->new( ... )
+    $data = <<_END_
+    # Xyzzy
+    #   --- START 
+        qwerty
+
+            1 2 3 4 5 6
+    8 9 10 The end
+
+    # abcdefghi
+            jklmnop
+    _END_
+
+    $split = Text::Split->new( data => ... )->find( qr/#\s*--- START/ )
+    ( $split, $content ) = $split->find( qr/ The end/, slurp => '[]' )
+
+C<$content> = 
+
+    #   --- START 
+        qwerty
+
+            1 2 3 4 5 6
+    8 9 10 The end
+
+Alternatively, with
+
+    ( $split, $content ) = $split->find( qr/ The end/, slurp => '()' )
+
+C<$content> = 
+
+        qwerty
+
+            1 2 3 4 5 6
+
+=head1 DESCRIPTION
+
+With Text::Split, given a split in some text, you can access the text preceding and remaining the split. Consecutive splitting lets you slurp text from between splits (optionally including the text from the splits at either end).
+
+More documentation coming soon.
 
 =cut
 
@@ -88,6 +125,10 @@ sub _parse_slurp ($@) {
     } 
 
     return %slurp;
+}
+
+sub find {
+    return shift->split( @_ );
 }
 
 sub split {

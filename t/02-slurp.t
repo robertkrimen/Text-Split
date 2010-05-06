@@ -8,9 +8,9 @@ plan 'no_plan';
 
 use Text::Split;
 
-my ( $t0, $content );
+my ( $t0, $content, $data );
 
-my $data = <<_END_;
+$data = <<_END_;
 
 {
     abcdefghijklmnopqrstuvwxyz
@@ -35,4 +35,36 @@ is( $content, <<_END_ );
     abcdefghijklmnopqrstuvwxyz
 
   qwerty
+_END_
+
+$data = <<_END_;
+# Xyzzy
+#   --- START 
+    qwerty
+
+        1 2 3 4 5 6
+8 9 10 The end
+
+# abcdefghi
+        jklmnop
+_END_
+
+$t0 = Text::Split->new( data => $data )->find( qr/#\s*--- START/ );
+( $t0, $content ) = $t0->find( qr/ The end/, slurp => '[]' );
+
+is( $content, <<_END_ );
+#   --- START 
+    qwerty
+
+        1 2 3 4 5 6
+8 9 10 The end
+_END_
+
+$t0 = Text::Split->new( data => $data )->find( qr/#\s*--- START/ );
+( $t0, $content ) = $t0->find( qr/ The end/, slurp => '()' );
+
+is( $content, <<_END_ );
+    qwerty
+
+        1 2 3 4 5 6
 _END_
