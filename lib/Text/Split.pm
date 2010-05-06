@@ -83,7 +83,7 @@ sub _ftail ($$) {
 
 sub parent {
     my $self = shift;
-    if ( my $parent = $_[0]->_parent ) { return $parent }
+    if ( my $parent = $self->_parent ) { return $parent }
     return $self; # We are the base (root) split
 }
 
@@ -163,13 +163,23 @@ sub split {
         default => $self->default,
     );
 
-    return $split unless wantarray && ( my $slurp = $given{slurp} );
+    return $split unless wantarray && ( my $slurp = delete $given{slurp} );
+    return ( $split, $split->slurp( $slurp, %given ) );
+}
+
+sub slurp {
+    my $self = shift;
+    my $slurp;
+    $slurp = shift if @_ % 2; # Odd number of arguments
+    my %given = @_;
+
+    my $split = $self;
 
     my %slurp = _parse_slurp $self->default->{slurp};
     %slurp = _parse_slurp $slurp, %slurp unless $slurp eq 1;
 
     my @content;
-    push @content, $self->content if $slurp{slurpl};
+    push @content, $self->parent->content if $slurp{slurpl};
     push @content, $split->preceding;
     push @content, $split->content if $slurp{slurpr};
 
@@ -181,7 +191,7 @@ sub split {
         @content = ( join '', @content );
     }
 
-    return ( $split, @content );
+    return @content;
 }
 
 sub preceding {
