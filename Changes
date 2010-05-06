@@ -2,7 +2,8 @@ TODO:
     - Test for /mgc
     - Automatically add /m to end of pattern?
 
-0.011:
+0.011 Thursday May 06 07:39:26 PDT 2010:
+    - Improved regular expression handling
     - Added separate .slurp method
 
 0.010 Wednesday May 05 18:00:16 PDT 2010:

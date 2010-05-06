@@ -31,11 +31,12 @@ S3
 ijkl
 
 # ---
+
 _END_
 
 $t0 = Text::Split->new( data => $data );
 
-my $pattern = qr/^#\s*---[^\S\n]*(\S+)?/m;
+my $pattern = qr/^#[^\S\n]*---[^\S\n]*(\S+)?/m;
 
 $t0 = $t0->find( $pattern );
 is( $t0->match( 0 ), 'IGNORE' );
