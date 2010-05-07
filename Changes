@@ -2,7 +2,7 @@ TODO:
     - Test for /mgc
     - Automatically add /m to end of pattern?
 
-0.0012
+0.0012 Friday May 07 11:43:20 PDT 2010:
     - Do not automatically add "\n" to the end of the empty string
     - Check for 0 length before splitting
     - Add trimming (trim, trimmed)
