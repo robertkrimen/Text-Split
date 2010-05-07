@@ -66,7 +66,7 @@ sub BUILD {
     my $data = $self->data;
     if ( ref $data ne 'SCALAR' ) {
         chomp $data;
-        $data .= "\n";
+        $data .= "\n" if length $data;
         $self->_data( \$data );
     }
 }
@@ -96,21 +96,23 @@ sub is_root {
     return ! $self->_parent;
 }
 
-sub _chomped2chomp ($) {
+sub _strip_edness ($) {
     my $slurp = $_[0];
     $slurp->{chomp} = delete $slurp->{chomped} if
         exists $slurp->{chomped} && not exists $slurp->{chomp};
+    $slurp->{trim} = delete $slurp->{trimmed} if
+        exists $slurp->{trimmed} && not exists $slurp->{trim};
 }
 
 sub _parse_slurp ($@) {
     my $slurp = shift;
     my %slurp = @_; # Can/will be overidden
 
-    _chomped2chomp \%slurp;
+    _strip_edness \%slurp;
 
     if ( ref $slurp eq 'HASH' ) {
         $slurp = { %$slurp };
-        _chomped2chomp $slurp;
+        _strip_edness $slurp;
         %slurp = ( %slurp, %$slurp );
     }
     else {
@@ -142,9 +144,10 @@ sub split {
     my %given = @_;
 
     my $data = $self->data;
-    my $from = $self->_parent ? $self->tail + 1 : 0;
     my $length = length $$data;
+    return unless $length; # Nothing to split
 
+    my $from = $self->_parent ? $self->tail + 1 : 0;
     return if $length <= $from; # Was already at end of data
 
     pos $data = $from;
@@ -182,9 +185,9 @@ sub slurp {
 
     my $split = $self;
 
-    _chomped2chomp \%given;
+    _strip_edness \%given;
     my %slurp = _parse_slurp $self->default->{slurp};
-    $slurp{chomp} = $given{chomp} if exists $given{chomp};
+    exists $given{$_} and $slurp{$_} = $given{$_} for qw/ chomp trim /;
     %slurp = _parse_slurp $slurp, %slurp unless $slurp eq 1;
 
     my @content;
@@ -192,13 +195,18 @@ sub slurp {
     push @content, $split->preceding;
     push @content, $split->content if $slurp{slurpr};
 
+    my $content = join '', @content;
+    if ( $slurp{trim} ) {
+        s/^\s*//, s/\s*$//, for $content;
+    }
+
     if ( wantarray && $slurp{wantlist} ) {
-        @content = grep { $_ ne "\n" } split m/(\n)/, join '', @content;
+        @content = grep { $_ ne "\n" } split m/(\n)/, $content;
         @content = map { "$_\n" } @content unless $slurp{chomp};
         return @content;
     }
     else {
-        return join '', @content;
+        return $content;
     }
 }
 
