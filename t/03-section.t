@@ -69,20 +69,25 @@ is( $t0->remaining, <<_END_ );
 
 _END_
 
-#my ( $section, @m0, @i0 );
-#$section = \@m0;
-#while( $t0 = $t0->find( qr/^#\s*---\s*(\S+)?/m ) ) {
-#    diag '<', $t0->content, '>';
-#    if ( $t0->is( 0 => 'IGNORE' ) ) {
-#        push @$section, $t0->slurp( '@[)', chomp => 1 );
-#        $section = \@i0;
-#    }
-#    elsif ( $t0->is( 0 => 'SKIP' ) ) {
-#        push @$section, $t0->slurp( '()' );
-#    }
-#}
+$data = <<_END_;
 
-#diag scalar @m0;
-#diag scalar @i0;
-#diag "[", join( '/', @m0 ), "]";
-#diag "[@i0]";
+A1
+A2
+
+
+B1
+B2
+B3
+
+
+C1
+C2
+_END_
+
+chomp $data;
+$t0 = Text::Split->new( data => $data );
+my @got;
+while( $t0 = $t0->find( qr/(\n\n+|\Z)/ ) ) {
+    push @got, map { s/^\s*//; s/\s*$//; $_ } $t0->slurp;
+}
+cmp_deeply( \@got, [ "A1\nA2", "B1\nB2\nB3", "C1\nC2" ] );

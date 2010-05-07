@@ -64,7 +64,11 @@ sub _build_default { {
 sub BUILD {
     my $self = shift;
     my $data = $self->data;
-    $self->_data( \$data ) unless ref $data eq 'SCALAR';
+    if ( ref $data ne 'SCALAR' ) {
+        chomp $data;
+        $data .= "\n";
+        $self->_data( \$data );
+    }
 }
 
 sub _fhead ($$) {
