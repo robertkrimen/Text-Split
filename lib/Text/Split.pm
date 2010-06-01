@@ -40,7 +40,7 @@ C<$content> =
 
 With Text::Split, given a split in some text, you can access the text preceding and remaining the split. Consecutive splitting lets you slurp text from between splits (optionally including the text from the splits at either end).
 
-More documentation coming soon.
+This distribution is deprecated, and will be renamed to L<Text::Clip>
 
 =cut
 
