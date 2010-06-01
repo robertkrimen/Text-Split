@@ -1,8 +1,8 @@
 NAME
-    Text::Split - Text splitting with fine-grained control
+    Text::Clip - Clip and extract text in clipboard-like way
 
 VERSION
-    version 0.0012
+    version 0.0014
 
 SYNOPSIS
         $data = <<_END_
@@ -17,8 +17,8 @@ SYNOPSIS
                 jklmnop
         _END_
 
-        $split = Text::Split->new( data => ... )->find( qr/#\s*--- START/ )
-        ( $split, $content ) = $split->find( qr/ The end/, slurp => '[]' )
+        $mark = Text::Clip->new( data => ... )->find( qr/#\s*--- START/ )
+        ( $mark, $content ) = $mark->find( qr/ The end/, slurp => '[]' )
 
     $content =
 
@@ -30,7 +30,7 @@ SYNOPSIS
 
     Alternatively, with
 
-        ( $split, $content ) = $split->find( qr/ The end/, slurp => '()' )
+        ( $mark, $content ) = $mark->find( qr/ The end/, slurp => '()' )
 
     $content =
 
@@ -39,12 +39,10 @@ SYNOPSIS
                 1 2 3 4 5 6
 
 DESCRIPTION
-    With Text::Split, given a split in some text, you can access the text
-    preceding and remaining the split. Consecutive splitting lets you slurp
-    text from between splits (optionally including the text from the splits
-    at either end).
-
-    More documentation coming soon.
+    Text::Clip allows you to mark/slice up a piece of text. String matching
+    (by regular expression, etc.) is used to place marks. The first mark
+    lets you access the text preceding and following the mark. Subsequent
+    marks allow you to slurp up the text "clipped" between the marks.
 
 AUTHOR
       Robert Krimen <robertkrimen@gmail.com>

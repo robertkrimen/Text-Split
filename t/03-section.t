@@ -6,7 +6,7 @@ use warnings;
 use Test::Most;
 plan 'no_plan';
 
-use Text::Split;
+use Text::Clip;
 
 my ( $t0, $content, $data );
 
@@ -34,7 +34,7 @@ ijkl
 
 _END_
 
-$t0 = Text::Split->new( data => $data );
+$t0 = Text::Clip->new( data => $data );
 
 my $pattern = qr/^#[^\S\n]*---[^\S\n]*(\S+)?/m;
 
@@ -85,7 +85,7 @@ C2
 _END_
 
 chomp $data;
-$t0 = Text::Split->new( data => $data );
+$t0 = Text::Clip->new( data => $data );
 my @got;
 while( $t0 = $t0->find( qr/(\n\n+|\Z)/ ) ) {
     push @got, map { s/^\s*//; s/\s*$//; $_ } $t0->slurp;

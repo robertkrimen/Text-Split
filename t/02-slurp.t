@@ -6,7 +6,7 @@ use warnings;
 use Test::Most;
 plan 'no_plan';
 
-use Text::Split;
+use Text::Clip;
 
 my ( $t0, $content, $data );
 
@@ -25,7 +25,7 @@ $data = <<_END_;
 
 _END_
 
-$t0 = Text::Split->new( data => $data );
+$t0 = Text::Clip->new( data => $data );
 
 ( $t0, $content ) = $t0->split( qr/rty/, slurp => '[]' );
 
@@ -49,7 +49,7 @@ $data = <<_END_;
         jklmnop
 _END_
 
-$t0 = Text::Split->new( data => $data )->find( qr/#\s*--- START/ );
+$t0 = Text::Clip->new( data => $data )->find( qr/#\s*--- START/ );
 ( $t0, $content ) = $t0->find( qr/ The end/, slurp => '[]' );
 
 is( $content, <<_END_ );
@@ -60,7 +60,7 @@ is( $content, <<_END_ );
 8 9 10 The end
 _END_
 
-$t0 = Text::Split->new( data => $data )->find( qr/#\s*--- START/ );
+$t0 = Text::Clip->new( data => $data )->find( qr/#\s*--- START/ );
 ( $t0, $content ) = $t0->find( qr/ The end/, slurp => '()' );
 
 is( $content, <<_END_ );

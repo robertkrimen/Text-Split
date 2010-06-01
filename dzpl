@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use Dzpl
-    name => 'Text-Split',
-    version => '0.0012',
+    name => 'Text-Clip',
+    version => '0.0014',
     author => 'Robert Krimen <robertkrimen@gmail.com>',
     license => 'Perl5',
     copyright => 'Robert Krimen',
@@ -14,13 +14,4 @@ use Dzpl
     /;
 ;
 
-plugin
-    '@Basic' => qr/Readme$/,
-    'PkgVersion',
-    'PodWeaver',
-    'ReadmeFromPod',
-    '=Dist::Dzpl::Plugin::DynamicManifest',
-    '=Dist::Dzpl::Plugin::CopyReadmeFromBuild',
-;
-
-run;
+{ plugin '@ROKR::Basic' }

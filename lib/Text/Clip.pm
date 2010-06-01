@@ -1,5 +1,5 @@
-package Text::Split;
-# ABSTRACT: Text splitting with fine-grained control
+package Text::Clip;
+# ABSTRACT: Clip and extract text in clipboard-like way
 
 =head1 SYNOPSIS
 
@@ -15,8 +15,8 @@ package Text::Split;
             jklmnop
     _END_
 
-    $split = Text::Split->new( data => ... )->find( qr/#\s*--- START/ )
-    ( $split, $content ) = $split->find( qr/ The end/, slurp => '[]' )
+    $mark = Text::Clip->new( data => ... )->find( qr/#\s*--- START/ )
+    ( $mark, $content ) = $mark->find( qr/ The end/, slurp => '[]' )
 
 C<$content> = 
 
@@ -28,7 +28,7 @@ C<$content> =
 
 Alternatively, with
 
-    ( $split, $content ) = $split->find( qr/ The end/, slurp => '()' )
+    ( $mark, $content ) = $mark->find( qr/ The end/, slurp => '()' )
 
 C<$content> = 
 
@@ -38,9 +38,7 @@ C<$content> =
 
 =head1 DESCRIPTION
 
-With Text::Split, given a split in some text, you can access the text preceding and remaining the split. Consecutive splitting lets you slurp text from between splits (optionally including the text from the splits at either end).
-
-More documentation coming soon.
+Text::Clip allows you to mark/slice up a piece of text. String matching (by regular expression, etc.) is used to place marks. The first mark lets you access the text preceding and following the mark. Subsequent marks allow you to slurp up the text "clipped" between the marks.
 
 =cut
 
@@ -48,7 +46,7 @@ use Any::Moose;
 
 has data => qw/ reader data writer _data required 1 /;
 has [qw/ start head tail mhead mtail /] => qw/ is rw required 1 isa Int default 0 /;
-has _parent => qw/ is ro isa Maybe[Text::Split] init_arg parent /;
+has _parent => qw/ is ro isa Maybe[Text::Clip] init_arg parent /;
 
 has found => qw/ is ro required 1 isa Str /, default => '';
 has content => qw/ is ro required 1 isa Str /, default => '';

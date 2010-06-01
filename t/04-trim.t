@@ -6,7 +6,7 @@ use warnings;
 use Test::Most;
 plan 'no_plan';
 
-use Text::Split;
+use Text::Clip;
 
 my ( $t0, $content, $data );
 
@@ -18,7 +18,7 @@ M3
 
 _END_
 
-$t0 = Text::Split->new( data => $data );
+$t0 = Text::Clip->new( data => $data );
 
 my $pattern = qr/\Z/m;
 $t0 = $t0->find( $pattern );
