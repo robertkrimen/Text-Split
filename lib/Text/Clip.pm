@@ -63,7 +63,7 @@ sub BUILD {
     my $self = shift;
     my $data = $self->data;
     if ( ref $data ne 'SCALAR' ) {
-        chomp $data;
+        $data =~ s/\n\Z//; # Not chomp, because people can mess with $/
         $data .= "\n" if length $data;
         $self->_data( \$data );
     }
@@ -226,7 +226,7 @@ sub remaining {
 
     my $from = $self->tail + 1;
 
-    my $length = length( $$data ) - $from + 1;
+    my $length = length( $$data ) - $from;
     return '' unless $length;
     return substr $$data, $from, $length;
 }
