@@ -5,7 +5,7 @@ package Text::Clip;
 
     $data = <<_END_
     # Xyzzy
-    #   --- START 
+    #   --- START
         qwerty
 
             1 2 3 4 5 6
@@ -18,9 +18,9 @@ package Text::Clip;
     $mark = Text::Clip->new( data => ... )->find( qr/#\s*--- START/ )
     ( $mark, $content ) = $mark->find( qr/ The end/, slurp => '[]' )
 
-C<$content> = 
+C<$content> =
 
-    #   --- START 
+    #   --- START
         qwerty
 
             1 2 3 4 5 6
@@ -30,7 +30,7 @@ Alternatively, with
 
     ( $mark, $content ) = $mark->find( qr/ The end/, slurp => '()' )
 
-C<$content> = 
+C<$content> =
 
         qwerty
 
@@ -42,9 +42,10 @@ Text::Clip allows you to mark/slice up a piece of text. String matching (by regu
 
 =cut
 
-use Any::Moose;
+use Moo;
+use MooX::late;
 
-has data => qw/ reader data writer _data required 1 /;
+has data => qw/ reader data writer _data required 1 is rw/;
 has [qw/ start head tail mhead mtail /] => qw/ is rw required 1 isa Int default 0 /;
 has _parent => qw/ is ro isa Maybe[Text::Clip] init_arg parent /;
 
@@ -126,7 +127,7 @@ sub _parse_slurp ($@) {
         $slurp{slurpl}      = $2 eq '[' ? 1 : 0;
         $slurp{slurpr}      = $3 eq ']' ? 1 : 0;
         $slurp{chomp}       = 1 if $4;
-    } 
+    }
 
     return %slurp;
 }
